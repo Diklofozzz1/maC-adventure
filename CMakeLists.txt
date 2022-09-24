@@ -1,19 +1,19 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Messager VERSION 0.1.0)
 
-set(HEADERS 
-    src/Server.h
-)
+# set(HEADERS 
+#     src/Ex.h
+# )
 
 set(SOURCES 
-    src/Server.cpp
+    src/Example.cpp
 )
 
 find_package (Boost REQUIRED system QUIET)
 
 add_executable(${PROJECT_NAME} 
     src/main.cpp 
-    ${HEADERS} 
+    # ${HEADERS} 
     ${SOURCES}
     ${Boost_INCLUDE_DIR})
 
