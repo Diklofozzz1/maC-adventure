@@ -1,0 +1,5 @@
+/mnt/d/messager/client/build/CMakeFiles/edit_cache.dir
+/mnt/d/messager/client/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/messager/client/build/CMakeFiles/package.dir
+/mnt/d/messager/client/build/CMakeFiles/package_source.dir
+/mnt/d/messager/client/build/CMakeFiles/Messager.dir

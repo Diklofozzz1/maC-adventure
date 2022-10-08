@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/mnt/d/messager/client/build",
+  "command": "/usr/bin/g++   -I../src -I../Connection -I../Message -I../NetModel -I../UI  -g   -o CMakeFiles/Messager.dir/src/main.cpp.o -c /mnt/d/messager/client/src/main.cpp",
+  "file": "/mnt/d/messager/client/src/main.cpp"
+}
+]
