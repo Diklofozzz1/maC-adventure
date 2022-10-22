@@ -27,7 +27,7 @@ public:
     
     void start(const std::string &address, const uint32_t port)
     {   
-        if(isStarted)
+        if(isStarted())
         {
             std::cout << "[SERVER] Server already started...\n";
             return;
@@ -87,17 +87,17 @@ public:
 private:
     void _wait_for_connection()
     {
-        auto new_connection = std::make_shared<TcpConnection>(_acceptor->get_executor());
+        auto new_connection = std::make_shared<TcpConnection>(_io_service);
 
         _acceptor->async_accept(new_connection->socket(), boost::bind(
             &Impl::_handle_accept,
             this,
             new_connection,
-            std::placeholders::_1
+            boost::asio::placeholders::error
         ));
     }
 
-    void _handle_accept(std::shared_ptr<TcpConnection> new_connection, boost::system::error_code& error)
+    void _handle_accept(std::shared_ptr<TcpConnection> new_connection, boost::system::error_code error)
     {
         if(not error)
         {
@@ -142,7 +142,7 @@ void Server::stop()
 
 bool Server::isStarted()
 {
-    _impl->isStarted();
+    return _impl->isStarted();
 }
 
 // std::vector<Server::client> Server::connections()

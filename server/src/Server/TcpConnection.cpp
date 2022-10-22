@@ -104,9 +104,17 @@ private:
     std::vector<std::shared_ptr<raw_consumer>> _consumers;
 };
 
-uint32_t TcpConnection::get_id()
+TcpConnection::TcpConnection(boost::asio::io_service& io_service)
 {
-    _impl->get_id();
+    // boost::asio::io_service io_service;
+    _impl = std::make_unique<TcpConnection::Impl>(io_service);
+}
+
+TcpConnection::~TcpConnection() = default;
+
+uint64_t TcpConnection::get_id()
+{
+    return _impl->get_id();
 }
 
 void TcpConnection::connect()
@@ -116,7 +124,7 @@ void TcpConnection::connect()
 
 boost::asio::ip::tcp::socket &TcpConnection::socket()
 {
-    _impl->socket();
+    return _impl->socket();
 }
 
 void  TcpConnection::disconnect()
@@ -126,7 +134,7 @@ void  TcpConnection::disconnect()
 
 bool TcpConnection::isConnected() const
 {
-    _impl->isConnected();
+    return _impl->isConnected();
 }
 
 void TcpConnection::subscribe(std::shared_ptr<raw_consumer> consumer)

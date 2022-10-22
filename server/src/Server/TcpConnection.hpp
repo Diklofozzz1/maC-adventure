@@ -14,6 +14,9 @@ class TcpConnection
     : private std::enable_shared_from_this<TcpConnection>
 {
 public:
+    TcpConnection(boost::asio::io_service& io_service);
+    ~TcpConnection();
+
     uint64_t get_id();
     void connect();
     void disconnect();
@@ -25,7 +28,6 @@ public:
     void unSubscribe();
 
 private:
-    TcpConnection()=default;
     class Impl;
     std::unique_ptr<Impl> _impl;
 };

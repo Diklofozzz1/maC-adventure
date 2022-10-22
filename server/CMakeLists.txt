@@ -2,19 +2,19 @@ cmake_minimum_required(VERSION 3.0.0)
 project(Messager VERSION 0.1.0)
 
 set(HEADERS 
-"src/Message/IMessage.hpp"
-"src/Message/Message.hpp"
-"src/NetModel/IConsumer.hpp"
-"src/NetModel/IDataProvider.hpp"
-"src/NetModel/NetModel.hpp"
-"src/Server/Server.hpp"
-"src/Server/TcpConnection.hpp"
+    "src/Message/IMessage.hpp"
+    "src/Message/Message.hpp"
+    "src/NetModel/IConsumer.hpp"
+    "src/NetModel/IDataProvider.hpp"
+    "src/NetModel/NetModel.hpp"
+    "src/Server/Server.hpp"
+    "src/Server/TcpConnection.hpp"
 )
 
 set(SOURCES 
-"src/Message/Message.cpp"
-"src/Server/TcpConnection.cpp"
-"src/Server/Server.cpp"
+    "src/Message/Message.cpp"
+    "src/Server/TcpConnection.cpp"
+    "src/Server/Server.cpp"
 )
 
 find_package (Boost REQUIRED system QUIET)
