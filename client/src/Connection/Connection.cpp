@@ -1,5 +1,9 @@
 #include <array>
+#include <thread>
+#include <chrono>
+
 #include <boost/asio.hpp>
+#include<boost/system/error_code.hpp>
 
 #include "Connection.hpp"
 
@@ -7,26 +11,43 @@ const size_t MAX_BUFFER_SIZE = 65535;
 
 class Connection::Impl
 {
-public:
+public: 
     void connect(const std::string & address, const uint16_t port) // нужна ли мне здесь асинхронщина, если по задумке сервер 1 (не нужно)
     {
-        if(isConnected())
+        if(isStarted())
         {
             throw std::runtime_error("Socket already in use!");
         }
-        
-        //синхронный коннект
-        _socket = std::make_unique<boost::asio::ip::tcp::socket>(_ioService);
-        _endpoint = std::make_unique<boost::asio::ip::tcp::endpoint>(boost::asio::ip::address_v4::from_string(address),port);
-        boost::system::error_code ec;
-        _socket.connect(_endpoint, ec);
-        if (ec)
-        {
-            throw std::runtime_error("Error with connection: " + std::to_string(error.value()));
-        }
-        _isConnected = true;
-        _listener(); 
 
+        _isStarted = true;
+
+        _worker = std::thread([this, address, port](){
+            while(isStarted())
+                {
+                //синхронный коннект
+                _socket = std::make_unique<boost::asio::ip::tcp::socket>(_ioService);
+                _endpoint = std::make_unique<boost::asio::ip::tcp::endpoint>(boost::asio::ip::address_v4::from_string(address),port);
+                boost::system::error_code ec;
+                _socket->connect(*_endpoint, ec);
+                if (ec)
+                {
+                    throw std::runtime_error("Error with connection: " + std::to_string(ec.value()));
+                }
+                _isConnected = true;
+                _listener(); 
+
+                while(_isStarted and _isConnected)
+                {
+                    _ioService.poll_one();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(150));
+                }
+
+                _socket.release();
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(150));
+            }
+        });
+       
         // асинхронный коннект 
         // _socket.async_connect(*_endpoint.get(), [this](boost::system::error_code error){
         //     if(not error)
@@ -43,7 +64,7 @@ public:
         if(isConnected())
         {   
             boost::system::error_code error;
-            _socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
+            _socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
             if(error)
             {
                 throw std::runtime_error("Error with disconnection: " + std::to_string(error.value()));
@@ -55,6 +76,11 @@ public:
     bool isConnected() const
     {
         return _isConnected;
+    }
+
+    bool isStarted() const
+    {
+        return _isStarted;
     }
 
     void subscribe(std::shared_ptr<raw_consumer> consumer)
@@ -70,7 +96,7 @@ private:
             throw std::runtime_error("Client is not connected");
         }
 
-        _socket.async_receive(boost::asio::buffer( _buffer, _buffer.size()), [this](boost::system::error_code error, size_t reseivedBytes) 
+        _socket->async_receive(boost::asio::buffer( _buffer, _buffer.size()), [this](boost::system::error_code error, size_t reseivedBytes) 
         {
             if(not error and reseivedBytes > 0)
             {
@@ -78,7 +104,7 @@ private:
                 
                 for(auto consumer: _consumers)
                 {
-                    consumer->consume(recivedData);
+                    consumer->consume(receivedData);
                 }
             }
             else if (error = boost:: asio::error::eof)
@@ -102,9 +128,19 @@ private:
 
     std::vector<std::shared_ptr<raw_consumer>> _consumers;
 
+    std::thread _worker;
+
     bool _isConnected;
+    bool _isStarted;
     std::array<uint8_t, MAX_BUFFER_SIZE> _buffer;
 };
+
+Connection::Connection()
+{
+    _impl = std::make_unique<Connection::Impl>();
+}
+
+Connection::~Connection() = default;
 
 void Connection::connect(const std::string & address, const uint16_t port)
 {
@@ -118,10 +154,10 @@ void  Connection::disconnect()
 
 bool Connection::isConnected() const
 {
-    _impl->isConnected();
+    return _impl->isConnected();
 }
 
-void subscribe(std::shared_ptrK<raw_consumer> consumer)
+void Connection::subscribe(std::shared_ptr<raw_consumer> consumer)
 {
     _impl->subscribe(consumer);
 };

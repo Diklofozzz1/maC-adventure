@@ -4,6 +4,7 @@
 #include<vector>
 #include<memory>
 
+#include "IDataProvider.hpp"
 #include "IConsumer.hpp"
 #include "Connection.hpp"
 #include "Message.hpp"
@@ -13,13 +14,13 @@ using message_consumer = std::shared_ptr<IConsumer<Message>>;
 class NetModel
     : public IConsumer<std::vector<char>>
     , public IDataProvider<Message>
-    , private std::enable_shared_from_this<Connection>
+    , private std::enable_shared_from_this<NetModel>
 {
 public:
     NetModel(std::shared_ptr<Connection> connection)
     {
         _connection = connection;
-        _connection->subscribe(shared_from_this());
+        // _connection->subscribe(shared_from_this());
     };
 
     void consume(std::vector<char> data){
@@ -33,7 +34,7 @@ public:
         }
     }
 
-    void subcribe(message_consumer consumer) override
+    void subscribe(message_consumer consumer) override
     {
         _messageConsumers.push_back(consumer);
     }   

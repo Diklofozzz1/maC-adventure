@@ -12,4 +12,4 @@ public:
     {
         std::cout<<msg.str()<<std::endl;
     }
-}
+};
