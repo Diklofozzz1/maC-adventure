@@ -1,0 +1,25 @@
+[
+{
+  "directory": "/mnt/d/messager/server/build",
+  "command": "/usr/bin/g++   -I../src -I../src/Server -I../src/Message -I../src/NetModel  -g   -o CMakeFiles/Messager.dir/src/main.cpp.o -c /mnt/d/messager/server/src/main.cpp",
+  "file": "/mnt/d/messager/server/src/main.cpp"
+},
+
+{
+  "directory": "/mnt/d/messager/server/build",
+  "command": "/usr/bin/g++   -I../src -I../src/Server -I../src/Message -I../src/NetModel  -g   -o CMakeFiles/Messager.dir/src/Message/Message.cpp.o -c /mnt/d/messager/server/src/Message/Message.cpp",
+  "file": "/mnt/d/messager/server/src/Message/Message.cpp"
+},
+
+{
+  "directory": "/mnt/d/messager/server/build",
+  "command": "/usr/bin/g++   -I../src -I../src/Server -I../src/Message -I../src/NetModel  -g   -o CMakeFiles/Messager.dir/src/Server/TcpConnection.cpp.o -c /mnt/d/messager/server/src/Server/TcpConnection.cpp",
+  "file": "/mnt/d/messager/server/src/Server/TcpConnection.cpp"
+},
+
+{
+  "directory": "/mnt/d/messager/server/build",
+  "command": "/usr/bin/g++   -I../src -I../src/Server -I../src/Message -I../src/NetModel  -g   -o CMakeFiles/Messager.dir/src/Server/Server.cpp.o -c /mnt/d/messager/server/src/Server/Server.cpp",
+  "file": "/mnt/d/messager/server/src/Server/Server.cpp"
+}
+]
