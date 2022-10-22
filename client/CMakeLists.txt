@@ -11,18 +11,17 @@ set(HEADERS
 )
 
 set(SOURCES 
-    "src/NetModel/IConsumer.hpp"
-    "src/NetModel/IDataProvider.hpp"
-    "src/NetModel/NetModel.hpp"
+    "src/Connection/Connection.cpp"
+    "src/Message/Message.cpp"
 )
 
 find_package (Boost REQUIRED system QUIET)
 
 include_directories("src")
-include_directories("Connection")
-include_directories("Message")
-include_directories("NetModel")
-include_directories("UI")
+include_directories("src/Connection")
+include_directories("src/Message")
+include_directories("src/NetModel")
+include_directories("src/UI")
 
 add_executable(${PROJECT_NAME} 
     src/main.cpp 

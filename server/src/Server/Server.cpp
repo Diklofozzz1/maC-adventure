@@ -15,11 +15,6 @@
 class Server::Impl
 {
 public: 
-    Impl(const std::string &address, const uint32_t port)
-    {
-        start(address, port);
-    }
-
     ~Impl() 
     { 
         stop();
@@ -106,6 +101,8 @@ private:
                 new_connection->connect();
                 
                 connections[new_connection->get_id()] = std::make_shared<NetModel>(new_connection);
+
+                new_connection->subscribe(connections[new_connection->get_id()]);
             }
             catch(const std::exception& err)
             {
@@ -129,6 +126,13 @@ private:
     boost::asio::io_service _io_service;
     std::shared_ptr<boost::asio::ip::tcp::acceptor> _acceptor;
 };
+
+Server::Server()
+{
+    _impl = std::make_unique<Server::Impl>();
+}
+
+Server::~Server() = default;
 
 void Server::start(const std::string &address, const uint32_t port)
 {

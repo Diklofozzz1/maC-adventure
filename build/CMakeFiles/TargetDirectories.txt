@@ -1,5 +1,0 @@
-/mnt/d/messager/build/CMakeFiles/edit_cache.dir
-/mnt/d/messager/build/CMakeFiles/rebuild_cache.dir
-/mnt/d/messager/build/CMakeFiles/package.dir
-/mnt/d/messager/build/CMakeFiles/package_source.dir
-/mnt/d/messager/build/CMakeFiles/Messager.dir

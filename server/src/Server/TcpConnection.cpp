@@ -72,7 +72,7 @@ private:
         }
 
         _socket.async_receive(boost::asio::buffer(_buffer, _buffer.size()), [this](boost::system::error_code error, size_t reseivedBytes){
-             if(not error and reseivedBytes > 0)
+            if(not error and reseivedBytes > 0)
             {
                 std::vector<uint8_t> recivedData(_buffer.begin(), _buffer.begin() + reseivedBytes);
                 
@@ -81,9 +81,9 @@ private:
                     consumer->consume(recivedData);
                 }
             }
-            else if (error = boost:: asio::error::eof)
+            else if (error == boost::asio::error::eof)
             {
-                throw::std::runtime_error("Connection was closed by remote peer!");
+                throw std::runtime_error("Connection was closed by remote peer!");
             }
             else 
             {

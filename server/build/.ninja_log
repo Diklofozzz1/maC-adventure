@@ -1,8 +1,0 @@
-# ninja log v5
-1	472	1666428719001873300	CMakeFiles/Messager.dir/src/main.cpp.o	e2dc66c50a019a
-3	561	1666428719091595100	CMakeFiles/Messager.dir/src/Message/Message.cpp.o	f59a3a62039e0b9a
-2	2767	1666428921580355800	CMakeFiles/Messager.dir/src/Server/TcpConnection.cpp.o	1430c2f2c006d89f
-11	2730	1666429750187360900	CMakeFiles/Messager.dir/src/Server/TcpConnection.cpp.o	1430c2f2c006d89f
-10	2675	1666430562880228800	CMakeFiles/Messager.dir/src/Server/TcpConnection.cpp.o	1430c2f2c006d89f
-10	2855	1666431594727168200	CMakeFiles/Messager.dir/src/Server/Server.cpp.o	571f101756eb93dc
-2855	3129	1666431594998924100	Messager	e2352f93a0026feb

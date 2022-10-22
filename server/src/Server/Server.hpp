@@ -7,6 +7,9 @@
 class Server
 {
 public:
+    Server();
+    ~Server();
+    
     void start(const std::string &address, const uint32_t port);
     void stop();
 

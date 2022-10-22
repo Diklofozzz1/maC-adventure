@@ -16,6 +16,7 @@ public:
     void connect(const std::string & address, const uint16_t port);
     void disconnect();
     bool isConnected() const;
+    void write(std::vector<uint8_t> data);
     // [[nodiscard]] std::shared_ptr<Connection> get_ptr(){ return shared_from_this();}
 
     void subscribe(std::shared_ptr<raw_consumer>);

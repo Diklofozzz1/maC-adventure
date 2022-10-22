@@ -10,17 +10,27 @@
 using namespace std::chrono_literals;
 
 int main (){
-    auto connection = std::make_shared<Connection>();
-    auto net_model = std::make_shared<NetModel>(connection);
-    auto ui = std::make_shared<UI>();
+    bool flag = true;
 
-    connection->subscribe(net_model);
-    connection->connect("127.0.0.1", 4000);
+    try
+    {
+        auto connection = std::make_shared<Connection>();
+        auto net_model = std::make_shared<NetModel>(connection);
+        auto ui = std::make_shared<UI>();
+
+        connection->subscribe(net_model);
+        connection->connect("0.0.0.0", 4000);
+        
+        net_model->subscribe(ui);
+    }
+    catch(const std::exception& e)
+    {
+        flag = false;
+        std::cerr << e.what() << '\n';
+    }
     
-    net_model->subscribe(ui);
-
     boost::asio::io_context context;
-    while(true)
+    while(flag)
     {
         if (context.stopped()) 
             context.restart();

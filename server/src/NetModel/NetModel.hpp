@@ -19,7 +19,7 @@ public:
     NetModel(std::shared_ptr<TcpConnection> connection)
     {
         _connection = connection;
-        _connection->subscribe(shared_from_this());
+        // _connection->subscribe(shared_from_this());
     }
 
     void consume(std::vector<uint8_t> data)

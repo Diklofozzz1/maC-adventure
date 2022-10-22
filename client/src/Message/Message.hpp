@@ -32,7 +32,7 @@ public:
         return _body.data;
     }
 
-private:
+public:
     Header _header;
     Body _body;
 };

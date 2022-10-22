@@ -6,6 +6,7 @@
 #include<boost/system/error_code.hpp>
 
 #include "Connection.hpp"
+#include "Message.hpp"
 
 const size_t MAX_BUFFER_SIZE = 65535;
 
@@ -38,8 +39,13 @@ public:
 
                 while(_isStarted and _isConnected)
                 {
+                    Message msg;
+
+                    msg._body.data = "Здарова, заебал!";
+                    write(msg.serialize());
+
                     _ioService.poll_one();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(150));
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
                 }
 
                 _socket.release();
@@ -71,6 +77,14 @@ public:
             }
         }
         throw std::runtime_error("Socket already disconnected!");
+    }
+
+    void write(std::vector<uint8_t> data)
+    {
+        if(not isConnected())
+            throw std::runtime_error("Client is not connected!");
+
+        _socket->write_some(boost::asio::buffer(data));
     }
 
     bool isConnected() const
@@ -107,9 +121,9 @@ private:
                     consumer->consume(receivedData);
                 }
             }
-            else if (error = boost:: asio::error::eof)
+            else if (error == boost:: asio::error::eof)
             {
-                throw::std::runtime_error("Connection was closed by remote peer!");
+                throw std::runtime_error("Connection was closed by remote peer!");
             }
             else 
             {
@@ -141,6 +155,11 @@ Connection::Connection()
 }
 
 Connection::~Connection() = default;
+
+void Connection::write(std::vector<uint8_t> data)
+{
+    _impl->write(data);
+}
 
 void Connection::connect(const std::string & address, const uint16_t port)
 {
