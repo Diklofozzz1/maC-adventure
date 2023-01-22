@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<chrono>
+#include<functional>
 
 #include <boost/asio.hpp>
 
@@ -13,9 +14,12 @@ class TcpConnection::Impl
      : std::enable_shared_from_this<TcpConnection::Impl>
 {
 public:
-    Impl(boost::asio::io_service& io_service, uint64_t id = std::chrono::system_clock::now().time_since_epoch().count())
+    Impl(boost::asio::io_service& io_service, 
+    refuseHandler handler,
+    uint64_t id = std::chrono::system_clock::now().time_since_epoch().count())
     : _socket(io_service)
     , _id(id)
+    , _handler(handler)
     {}
 
     ~Impl()
@@ -23,7 +27,7 @@ public:
         disconnect();
     }
 
-    uint32_t get_id()
+    uint64_t get_id()
     {
         return _id;
     }
@@ -58,6 +62,14 @@ public:
         return _socket;
     }
 
+    void write(std::vector<uint8_t> data)
+    {   
+        if(not isConnected())
+            throw std::runtime_error("");
+
+        _socket.write_some(boost::asio::buffer(data));
+    };
+
     void subscribe(std::shared_ptr<raw_consumer> consumer)
     {
         _consumers.push_back(consumer);
@@ -83,7 +95,7 @@ private:
             }
             else if (error == boost::asio::error::eof)
             {
-                throw std::runtime_error("Connection was closed by remote peer!");
+                _disconnectionHandler();
             }
             else 
             {
@@ -94,6 +106,14 @@ private:
         });
     }
 
+    // Кастыль...
+    void _disconnectionHandler()
+    {
+        // throw std::runtime_error("Connection was closed by remote peer!");
+        std::cout<<"Connection with: "<<_id<<" was closed by remote peer!"<<std::endl;
+        _handler(_id);
+    }
+
 private:
     uint64_t _id = 0;
 
@@ -102,12 +122,14 @@ private:
     bool _isConnected;
     std::array<uint8_t, MAX_BUFFER_SIZE> _buffer;
     std::vector<std::shared_ptr<raw_consumer>> _consumers;
+
+    std::function<void(uint64_t)> _handler;
 };
 
-TcpConnection::TcpConnection(boost::asio::io_service& io_service)
+TcpConnection::TcpConnection(boost::asio::io_service& io_service, refuseHandler handler)
 {
     // boost::asio::io_service io_service;
-    _impl = std::make_unique<TcpConnection::Impl>(io_service);
+    _impl = std::make_unique<TcpConnection::Impl>(io_service, handler);
 }
 
 TcpConnection::~TcpConnection() = default;
@@ -140,4 +162,9 @@ bool TcpConnection::isConnected() const
 void TcpConnection::subscribe(std::shared_ptr<raw_consumer> consumer)
 {
     _impl->subscribe(consumer);
+};
+
+void TcpConnection::write(std::vector<uint8_t> data)
+{
+    _impl->write(data);
 };

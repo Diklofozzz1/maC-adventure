@@ -9,11 +9,11 @@
 #include "Connection.hpp"
 #include "Message.hpp"
 
-using message_consumer = std::shared_ptr<IConsumer<Message>>;
+// using message_consumer = std::shared_ptr<IConsumer<Message>>;
 
 class NetModel
     : public IConsumer<std::vector<char>>
-    , public IDataProvider<Message>
+    // , public IDataProvider<Message>
     , private std::enable_shared_from_this<NetModel>
 {
 public:
@@ -24,22 +24,22 @@ public:
     };
 
     void consume(std::vector<char> data){
-        Message msg;
+        // Message msg;
         std::vector<uint8_t> castData(data.begin(), data.end());
-        msg.deSerialize(castData);
+        // msg.deSerialize(castData);
                
-        for(auto consumer: _messageConsumers)
-        {
-            consumer->consume(msg);
-        }
+        // for(auto consumer: _messageConsumers)
+        // {
+        //     consumer->consume(msg);
+        // }
     }
-
-    void subscribe(message_consumer consumer) override
-    {
-        _messageConsumers.push_back(consumer);
-    }   
+    
+    // void subscribe(message_consumer consumer) override
+    // {
+    //     _messageConsumers.push_back(consumer);
+    // }   
 
 private:
     std::shared_ptr<Connection> _connection;
-    std::vector<message_consumer> _messageConsumers;
+    // std::vector<message_consumer> _messageConsumers;
 };

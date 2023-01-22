@@ -5,11 +5,11 @@
 #include "Message.hpp"
 
 class UI
-    : public IConsumer<Message>
+    // : public IConsumer<Message>
 {
 public:
-    void consume(Message msg) override
-    {
-        std::cout<<msg.str()<<std::endl;
-    }
+    // void consume(Message msg) override
+    // {
+    //     std::cout<<msg.str()<<std::endl;
+    // }
 };

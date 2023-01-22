@@ -10,11 +10,13 @@
 
 using raw_consumer = IConsumer<std::vector<uint8_t>>; 
 
+using refuseHandler = std::function<void(uint64_t)>;
+
 class TcpConnection
     : private std::enable_shared_from_this<TcpConnection>
 {
 public:
-    TcpConnection(boost::asio::io_service& io_service);
+    TcpConnection(boost::asio::io_service& io_service, refuseHandler handler);
     ~TcpConnection();
 
     uint64_t get_id();
@@ -23,6 +25,8 @@ public:
     bool isConnected() const;
     boost::asio::ip::tcp::socket &socket();
     [[nodiscard]] std::shared_ptr<TcpConnection> get_ptr(){ return shared_from_this();}
+
+    void write(std::vector<uint8_t> data);
 
     void subscribe(std::shared_ptr<raw_consumer>);
     void unSubscribe();

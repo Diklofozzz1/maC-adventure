@@ -6,6 +6,8 @@
 class IMessage
 {
 public:
-    virtual std::vector<uint8_t> serialize() = 0;
-    virtual void deSerialize(std::vector<uint8_t> data) = 0;
+    virtual ~IMessage() = default;
+
+    virtual void deserialize(nlohmann::json const&) = 0;
+    virtual nlohmann::json serialize() = 0;
 };

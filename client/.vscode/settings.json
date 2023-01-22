@@ -64,7 +64,18 @@
         "thread": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "qgridlayout": "cpp",
+        "qapplication": "cpp",
+        "qtextedit": "cpp",
+        "qstring": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "filesystem": "cpp",
+        "valarray": "cpp",
+        "__nullptr": "cpp",
+        "__functional_base": "cpp",
+        "locale": "cpp"
     },
     "cmake.configureOnOpen": false
 }

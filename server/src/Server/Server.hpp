@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 
+
 class Server
 {
 public:
@@ -15,7 +16,8 @@ public:
 
     bool isStarted();
 
-    
+    // void onMessage() override;
+
 private:
     class Impl;
     std::unique_ptr<Impl> _impl;

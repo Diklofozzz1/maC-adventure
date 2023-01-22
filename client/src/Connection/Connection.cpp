@@ -39,10 +39,19 @@ public:
 
                 while(_isStarted and _isConnected)
                 {
-                    Message msg;
+                    // Message msg;
 
-                    msg._body.data = "Здарова, заебал!";
-                    write(msg.serialize());
+                    // msg._body.data = "Здарова, заебал!";
+                    // write(msg.serialize());
+
+                    message::PrivateMessage msg(
+                        Header::BaseInfo {}, 
+                        Body {"hi beatch"}
+                    ); 
+
+                    auto jsonStr = msg.serialize().dump();
+                    std::vector<uint8_t> byteStr (jsonStr.begin(), jsonStr.end());
+                    write(byteStr);
 
                     _ioService.poll_one();
                     std::this_thread::sleep_for(std::chrono::seconds(1));

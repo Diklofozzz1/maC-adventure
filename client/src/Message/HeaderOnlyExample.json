@@ -1,0 +1,17 @@
+{
+    "Header": {
+        "type": "One2All",
+        "BaseInfo": {
+            "from": "bla",
+            "to": "bla",
+            "date": "bla"
+        },
+
+        "BlobInfo" : {
+            "haveBlob": true,
+            "blobStartPosition": -1,
+            "blobEndPosition": -1,
+            "blobType": "Unknown"
+        }
+    }
+}
