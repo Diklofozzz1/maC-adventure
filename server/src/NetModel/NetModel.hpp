@@ -44,14 +44,11 @@ public:
         const auto typecode = strToTypeCode(json[strings::Header][strings::TypeCode].get<std::string>());
         
         using namespace message;
-        // --------
-        std::cout<<json.dump(4)<<std::endl;
-        // --------
+
         switch(typecode)
         {
             case TypeCode::One2One: 
             {   
-                std::cout<<"hi gnida"<<std::endl;
                 for (auto const & consumer : _privateMessageConsumers)
                     consumer->consume(PrivateMessage(json));
             }

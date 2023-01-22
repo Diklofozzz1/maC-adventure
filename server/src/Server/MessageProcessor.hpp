@@ -14,36 +14,36 @@ class MessageProcessor
 public:
     void consume(message::PrivateMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::PublicMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::GroupMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::OnlineListMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::PingMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::ConnectMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 
     void consume(message::DisconnectMessage msg) override 
     {
-        // TODO: handle message
+        std::cout<<msg.serialize().dump(4)<<std::endl;
     }
 };

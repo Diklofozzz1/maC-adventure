@@ -17,6 +17,7 @@ set(HEADERS
     "src/Server/TcpConnection.hpp"
     "src/types/MessageTypes.hpp"
     "src/Server/MessageProcessor.hpp"
+    "src/NetModel/MessageProcessor.hpp"
 )
 
 set(SOURCES 
