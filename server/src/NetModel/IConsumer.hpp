@@ -1,7 +1,6 @@
-#pragma once 
+#pragma once
 
-template<class T>
-class IConsumer
+template<class T> class IConsumer
 {
 public:
     virtual ~IConsumer() = default;

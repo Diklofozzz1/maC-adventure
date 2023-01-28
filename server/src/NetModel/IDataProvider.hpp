@@ -1,11 +1,10 @@
-#pragma once 
+#pragma once
 
 #include <memory>
 
 #include "IConsumer.hpp"
 
-template<class T>
-class IDataProvider
+template<class T> class IDataProvider
 {
 public:
     virtual ~IDataProvider() = default;

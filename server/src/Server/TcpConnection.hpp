@@ -1,30 +1,32 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
 #include <boost/asio.hpp>
 
 #include "IConsumer.hpp"
 
-using raw_consumer = IConsumer<std::vector<uint8_t>>; 
+using raw_consumer = IConsumer<std::vector<uint8_t>>;
 
 using refuseHandler = std::function<void(uint64_t)>;
 
-class TcpConnection
-    : private std::enable_shared_from_this<TcpConnection>
+class TcpConnection : private std::enable_shared_from_this<TcpConnection>
 {
 public:
-    TcpConnection(boost::asio::io_service& io_service, refuseHandler handler);
+    TcpConnection(boost::asio::io_service & io_service, refuseHandler handler);
     ~TcpConnection();
 
     uint64_t get_id();
     void connect();
     void disconnect();
     bool isConnected() const;
-    boost::asio::ip::tcp::socket &socket();
-    [[nodiscard]] std::shared_ptr<TcpConnection> get_ptr(){ return shared_from_this();}
+    boost::asio::ip::tcp::socket & socket();
+    [[nodiscard]] std::shared_ptr<TcpConnection> get_ptr()
+    {
+        return shared_from_this();
+    }
 
     void write(std::vector<uint8_t> data);
 

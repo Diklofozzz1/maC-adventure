@@ -1,26 +1,23 @@
 #include "TcpConnection.hpp"
 
-#include<memory>
-#include<string>
-#include<vector>
-#include<chrono>
-#include<functional>
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include <boost/asio.hpp>
 
 const size_t MAX_BUFFER_SIZE = 65535;
 
-class TcpConnection::Impl
-     : std::enable_shared_from_this<TcpConnection::Impl>
+class TcpConnection::Impl : std::enable_shared_from_this<TcpConnection::Impl>
 {
 public:
-    Impl(boost::asio::io_service& io_service, 
-    refuseHandler handler,
-    uint64_t id = std::chrono::system_clock::now().time_since_epoch().count())
-    : _socket(io_service)
-    , _id(id)
-    , _handler(handler)
-    {}
+    Impl(boost::asio::io_service & io_service, refuseHandler handler,
+         uint64_t id = std::chrono::system_clock::now().time_since_epoch().count())
+        : _socket(io_service), _id(id), _handler(handler)
+    {
+    }
 
     ~Impl()
     {
@@ -34,16 +31,16 @@ public:
 
     void connect()
     {
-        if(isConnected())
+        if (isConnected())
             throw std::runtime_error("Already connected!");
-        
+
         _isConnected = true;
         _listener();
     }
 
     void disconnect()
     {
-        if(isConnected())
+        if (isConnected())
         {
             _isConnected = false;
             boost::system::error_code error;
@@ -57,14 +54,14 @@ public:
         return _isConnected;
     }
 
-    boost::asio::ip::tcp::socket &socket()
+    boost::asio::ip::tcp::socket & socket()
     {
         return _socket;
     }
 
     void write(std::vector<uint8_t> data)
-    {   
-        if(not isConnected())
+    {
+        if (not isConnected())
             throw std::runtime_error("");
 
         _socket.write_some(boost::asio::buffer(data));
@@ -78,17 +75,19 @@ public:
 private:
     void _listener()
     {
-        if(not isConnected())
+        if (not isConnected())
         {
             throw std::runtime_error("There is no connection");
         }
 
-        _socket.async_receive(boost::asio::buffer(_buffer, _buffer.size()), [this](boost::system::error_code error, size_t reseivedBytes){
-            if(not error and reseivedBytes > 0)
+        _socket.async_receive(boost::asio::buffer(_buffer, _buffer.size()),
+        [this](boost::system::error_code error, size_t reseivedBytes)
+        {
+            if (not error and reseivedBytes > 0)
             {
                 std::vector<uint8_t> recivedData(_buffer.begin(), _buffer.begin() + reseivedBytes);
-                
-                for(auto consumer: _consumers)
+
+                for (auto consumer : _consumers)
                 {
                     consumer->consume(recivedData);
                 }
@@ -97,7 +96,7 @@ private:
             {
                 _disconnectionHandler();
             }
-            else 
+            else
             {
                 throw std::runtime_error("Error with listener: " + std::to_string(error.value()));
             }
@@ -110,7 +109,7 @@ private:
     void _disconnectionHandler()
     {
         // throw std::runtime_error("Connection was closed by remote peer!");
-        std::cout<<"Connection with: "<<_id<<" was closed by remote peer!"<<std::endl;
+        std::cout << "Connection with: " << _id << " was closed by remote peer!" << std::endl;
         _handler(_id);
     }
 
@@ -126,7 +125,7 @@ private:
     std::function<void(uint64_t)> _handler;
 };
 
-TcpConnection::TcpConnection(boost::asio::io_service& io_service, refuseHandler handler)
+TcpConnection::TcpConnection(boost::asio::io_service & io_service, refuseHandler handler)
 {
     // boost::asio::io_service io_service;
     _impl = std::make_unique<TcpConnection::Impl>(io_service, handler);
@@ -144,12 +143,12 @@ void TcpConnection::connect()
     _impl->connect();
 }
 
-boost::asio::ip::tcp::socket &TcpConnection::socket()
+boost::asio::ip::tcp::socket & TcpConnection::socket()
 {
     return _impl->socket();
 }
 
-void  TcpConnection::disconnect()
+void TcpConnection::disconnect()
 {
     _impl->disconnect();
 }

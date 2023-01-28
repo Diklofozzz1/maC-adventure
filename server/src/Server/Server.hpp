@@ -1,8 +1,8 @@
 #pragma once
 
-#include<memory>
-#include<string>
-#include<vector>
+#include <memory>
+#include <string>
+#include <vector>
 
 
 class Server
@@ -10,8 +10,8 @@ class Server
 public:
     Server();
     ~Server();
-    
-    void start(const std::string &address, const uint32_t port);
+
+    void start(const std::string & address, const uint32_t port);
     void stop();
 
     bool isStarted();

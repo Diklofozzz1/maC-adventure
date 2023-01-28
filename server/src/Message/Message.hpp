@@ -33,7 +33,8 @@ struct Header
 
     Header() = default;
 
-    Header(BaseInfo const & info, types::message::TypeCode code) : typeCode(code), info(info)
+    Header(BaseInfo const & info, types::message::TypeCode code)
+        : typeCode(code), info(info)
     {
     }
 
@@ -61,23 +62,27 @@ public:
     }
 
     void deserialize(nlohmann::json const & json_deser) override
-    {   
+    {
         using namespace types::message;
-        
-        _header.typeCode = strToTypeCode(json_deser[strings::Header][strings::TypeCode].get<std::string>());
-        
+
+        _header.typeCode = strToTypeCode(
+            json_deser[strings::Header][strings::TypeCode].get<std::string>());
+
         const auto & baseInfo = json_deser[strings::Header][strings::BaseInfo];
-        _header.info.from =  baseInfo[strings::From].get<std::string>();
-        _header.info.to =  baseInfo[strings::To].get<std::string>();
-        _header.info.date =  baseInfo[strings::Date].get<std::string>();
+        _header.info.from = baseInfo[strings::From].get<std::string>();
+        _header.info.to = baseInfo[strings::To].get<std::string>();
+        _header.info.date = baseInfo[strings::Date].get<std::string>();
 
         const auto & baseBlob = json_deser[strings::Header][strings::BlobInfo];
         _header.info.blobInfo.haveBlob = baseBlob[strings::HaveBlob].get<bool>();
-        _header.info.blobInfo.blobStartPosition = baseBlob[strings::BlobStartPosition].get<uint64_t>();
-        _header.info.blobInfo.blobStartPosition = baseBlob[strings::BlobEndPosition].get<uint64_t>();
-        _header.info.blobInfo.blobType = strToBlobType(baseBlob[strings::BlobType].get<std::string>());
+        _header.info.blobInfo.blobStartPosition
+            = baseBlob[strings::BlobStartPosition].get<uint64_t>();
+        _header.info.blobInfo.blobStartPosition
+            = baseBlob[strings::BlobEndPosition].get<uint64_t>();
+        _header.info.blobInfo.blobType
+            = strToBlobType(baseBlob[strings::BlobType].get<std::string>());
     }
-            
+
     nlohmann::json serialize() override
     {
         using namespace types::message;
@@ -94,7 +99,7 @@ public:
 
         auto & blobInfo = header[strings::BlobInfo];
         blobInfo[strings::HaveBlob] = _header.info.blobInfo.haveBlob;
-        blobInfo[strings::BlobStartPosition] =_header.info.blobInfo.blobStartPosition; 
+        blobInfo[strings::BlobStartPosition] = _header.info.blobInfo.blobStartPosition;
         blobInfo[strings::BlobEndPosition] = _header.info.blobInfo.blobStartPosition;
         blobInfo[strings::BlobType] = blobTypeToStr(_header.info.blobInfo.blobType);
 
@@ -131,21 +136,25 @@ public:
     }
 
     void deserialize(nlohmann::json const & json_deser) override
-    { 
+    {
         using namespace types::message;
-        
-        _header.typeCode = strToTypeCode(json_deser[strings::Header][strings::TypeCode].get<std::string>());
-        
+
+        _header.typeCode = strToTypeCode(
+            json_deser[strings::Header][strings::TypeCode].get<std::string>());
+
         const auto & baseInfo = json_deser[strings::Header][strings::BaseInfo];
-        _header.info.from =  baseInfo[strings::From].get<std::string>();
-        _header.info.to =  baseInfo[strings::To].get<std::string>();
-        _header.info.date =  baseInfo[strings::Date].get<std::string>();
+        _header.info.from = baseInfo[strings::From].get<std::string>();
+        _header.info.to = baseInfo[strings::To].get<std::string>();
+        _header.info.date = baseInfo[strings::Date].get<std::string>();
 
         const auto & baseBlob = json_deser[strings::Header][strings::BlobInfo];
         _header.info.blobInfo.haveBlob = baseBlob[strings::HaveBlob].get<bool>();
-        _header.info.blobInfo.blobStartPosition = baseBlob[strings::BlobStartPosition].get<uint64_t>();
-        _header.info.blobInfo.blobStartPosition = baseBlob[strings::BlobEndPosition].get<uint64_t>();
-        _header.info.blobInfo.blobType = strToBlobType(baseBlob[strings::BlobType].get<std::string>());
+        _header.info.blobInfo.blobStartPosition
+            = baseBlob[strings::BlobStartPosition].get<uint64_t>();
+        _header.info.blobInfo.blobStartPosition
+            = baseBlob[strings::BlobEndPosition].get<uint64_t>();
+        _header.info.blobInfo.blobType
+            = strToBlobType(baseBlob[strings::BlobType].get<std::string>());
 
         _body.data = json_deser[strings::Body][strings::Data].get<std::string>();
     }
@@ -166,12 +175,12 @@ public:
 
         auto & blobInfo = header[strings::BlobInfo];
         blobInfo[strings::HaveBlob] = _header.info.blobInfo.haveBlob;
-        blobInfo[strings::BlobStartPosition] =_header.info.blobInfo.blobStartPosition; 
+        blobInfo[strings::BlobStartPosition] = _header.info.blobInfo.blobStartPosition;
         blobInfo[strings::BlobEndPosition] = _header.info.blobInfo.blobStartPosition;
         blobInfo[strings::BlobType] = blobTypeToStr(_header.info.blobInfo.blobType);
 
         auto & body = json[strings::Body];
-        body[strings::Data] =  _body.data;
+        body[strings::Data] = _body.data;
 
         return json;
     }
@@ -213,7 +222,8 @@ protected:
 //             if (not _blob.empty())
 //                 _blob.clear();
 
-//             _blob.assign(std::next(raw.begin(), _header.info.blobInfo.blobStartPosition),
+//             _blob.assign(std::next(raw.begin(),
+//             _header.info.blobInfo.blobStartPosition),
 //                 std::next(raw.begin(), _header.info.blobInfo.blobEndPosition));
 //         }
 //     }

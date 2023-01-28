@@ -1,11 +1,11 @@
-#pragma once 
+#pragma once
 
 class ISender
 {
 public:
     virtual ~ISender() = default;
-    
-    virtual void sendToOne() = 0;
-    virtual void sendToAll()= 0;
-    virtual void sendToGroup()= 0;
+
+    virtual void sendToOne(uint64_t, std::vector<uint8_t> data) = 0;
+    virtual void sendToAll() = 0;
+    virtual void sendToGroup() = 0;
 };
