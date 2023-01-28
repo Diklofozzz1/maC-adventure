@@ -2,6 +2,7 @@
 #include "TcpConnection.hpp"
 #include "NetModel.hpp"
 #include "MessageProcessor.hpp"
+#include "ConnectionsManager.hpp"
 
 #include<memory>
 #include<thread>
@@ -18,6 +19,7 @@ class Server::Impl
 public: 
     Impl()
     : _processor(std::make_shared<MessageProcessor>())
+    , _connectionsManager(std::make_shared<ConnectionsManager>())
     {}
 
     ~Impl() 
@@ -37,11 +39,11 @@ public:
         _port = port;
 
         _service_thread = std::thread([this]()
-        {
-            _isStarted = true;
-            
+        {           
             auto endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::from_string(_address), _port);
             _acceptor = std::make_unique<boost::asio::ip::tcp::acceptor>(_io_service, endpoint);
+
+            _isStarted = true;
 
             std::cout << "[SERVER MESSAGE] Server started...\n";
 
@@ -79,25 +81,12 @@ public:
         return _isStarted;
     }
 
-    // void onMessage()
-    // {
-    //     //реализовать обработчик сообщений, несколько методов
-    //     //типо one2one, one2all и т.д.
-    // }
-    
-    // void writeTo(client client, std::string data)
-    // {
 
-    // }
-    
 private:
     void _wait_for_connection()
-    {
+    {   
         auto new_connection = std::make_shared<TcpConnection>(_io_service, [this](uint64_t id)->void{
-            if(_connections.count(id))
-            {
-                _connections.erase(id);
-            }
+            _connectionsManager->removeConnection(id);
         });
 
         _acceptor->async_accept(new_connection->socket(), boost::bind(
@@ -118,8 +107,8 @@ private:
                 
                 // _connections[new_connection->get_id()] = std::make_shared<NetModel>(new_connection);
 
-                auto netModel = std::make_shared<NetModel>(new_connection);
-                _connections[new_connection->get_id()] = netModel;
+                auto netModel = std::make_shared<NetModel>(_connectionsManager);
+                // _connections[new_connection->get_id()] = netModel;
 
                 netModel->subscribe(std::static_pointer_cast<IConsumer<message::PrivateMessage>>(_processor));
                 netModel->subscribe(std::static_pointer_cast<IConsumer<message::PublicMessage>>(_processor));
@@ -129,14 +118,9 @@ private:
                 netModel->subscribe(std::static_pointer_cast<IConsumer<message::ConnectMessage>>(_processor));
                 netModel->subscribe(std::static_pointer_cast<IConsumer<message::DisconnectMessage>>(_processor));
 
-                new_connection->subscribe(_connections[new_connection->get_id()]);
+                new_connection->subscribe(netModel);
 
-                //не забудь убрать этот мусор
-                for(auto& item : _connections)
-                {
-                    std::cout<<item.first<<" : "<<item.second<<std::endl;
-                }
-                //,,,,,,,,
+                _connectionsManager->addConnections(new_connection->get_id(), netModel);
             }
             catch(const std::exception& err)
             {
@@ -155,11 +139,12 @@ private:
 
     std::thread _service_thread;
 
-    std::map<uint64_t, std::shared_ptr<NetModel>> _connections;
+    // std::map<uint64_t, std::shared_ptr<NetModel>> _connections;
 
     boost::asio::io_service _io_service;
     std::shared_ptr<boost::asio::ip::tcp::acceptor> _acceptor;
 
+    std::shared_ptr<ConnectionsManager> _connectionsManager;
     std::shared_ptr<MessageProcessor> _processor;
 };
 

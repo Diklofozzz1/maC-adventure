@@ -6,7 +6,7 @@
 #include "IConsumer.hpp"
 #include "Message.hpp"
 #include "IDataProvider.hpp"
-#include "TcpConnection.hpp"
+#include "ISender.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -29,9 +29,9 @@ class NetModel
     , public IDataProvider<message::DisconnectMessage>
 {
 public:
-    NetModel(std::shared_ptr<TcpConnection> connection)
+    NetModel(std::shared_ptr<ISender> sender)
+    : _sender(sender)
     {
-        _connection = connection;
     }
 
     void consume(std::vector<uint8_t> data) override
@@ -131,5 +131,5 @@ private:
     std::vector<ConnectMessageConsumer>    _connectMessageConsumers;
     std::vector<DisconnectMessageConsumer> _disconnectMessageConsumers;
 
-    std::shared_ptr<TcpConnection> _connection;
+    std::shared_ptr<ISender> _sender;
 };
