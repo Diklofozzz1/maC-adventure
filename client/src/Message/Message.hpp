@@ -24,8 +24,8 @@ struct Header
 
     struct BaseInfo
     {
-        std::string from;
-        std::string to;
+        uint64_t from;
+        uint64_t to;
         std::string date;
 
         BlobInfo blobInfo;
@@ -67,8 +67,8 @@ public:
         _header.typeCode = strToTypeCode(json_deser[strings::Header][strings::TypeCode].get<std::string>());
         
         const auto & baseInfo = json_deser[strings::Header][strings::BaseInfo];
-        _header.info.from =  baseInfo[strings::From].get<std::string>();
-        _header.info.to =  baseInfo[strings::To].get<std::string>();
+        _header.info.from =  baseInfo[strings::From].get<uint64_t>();
+        _header.info.to =  baseInfo[strings::To].get<uint64_t>();
         _header.info.date =  baseInfo[strings::Date].get<std::string>();
 
         const auto & baseBlob = json_deser[strings::Header][strings::BlobInfo];
@@ -137,8 +137,8 @@ public:
         _header.typeCode = strToTypeCode(json_deser[strings::Header][strings::TypeCode].get<std::string>());
         
         const auto & baseInfo = json_deser[strings::Header][strings::BaseInfo];
-        _header.info.from =  baseInfo[strings::From].get<std::string>();
-        _header.info.to =  baseInfo[strings::To].get<std::string>();
+        _header.info.from =  baseInfo[strings::From].get<uint64_t>();
+        _header.info.to =  baseInfo[strings::To].get<uint64_t>();
         _header.info.date =  baseInfo[strings::Date].get<std::string>();
 
         const auto & baseBlob = json_deser[strings::Header][strings::BlobInfo];

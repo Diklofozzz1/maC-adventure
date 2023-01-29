@@ -24,8 +24,18 @@ public:
     };
 
     void consume(std::vector<char> data){
+        using namespace types::message;
+
+        std::string jsonStr(data.begin(), data.end());
+        const auto json = nlohmann::json::parse(jsonStr);
+
+        const auto typecode
+            = strToTypeCode(json[strings::Header][strings::TypeCode].get<std::string>());
+
+        std::cout << json.dump(4) << std::endl;
+        
         // Message msg;
-        std::vector<uint8_t> castData(data.begin(), data.end());
+        // std::vector<uint8_t> castData(data.begin(), data.end());
         // msg.deSerialize(castData);
                
         // for(auto consumer: _messageConsumers)

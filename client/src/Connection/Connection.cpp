@@ -37,6 +37,20 @@ public:
                 _isConnected = true;
                 _listener(); 
 
+                message::PrivateMessage msg(
+                    Header::BaseInfo {
+                        0,
+                        1675006247172356787,
+                        "0",
+                        {}
+                    }, 
+                    Body {"hi beatch"}
+                ); 
+
+                auto jsonStr = msg.serialize().dump();
+                std::vector<uint8_t> byteStr (jsonStr.begin(), jsonStr.end());
+                write(byteStr);
+
                 while(_isStarted and _isConnected)
                 {
                     // Message msg;
@@ -44,17 +58,17 @@ public:
                     // msg._body.data = "Здарова, заебал!";
                     // write(msg.serialize());
 
-                    message::PrivateMessage msg(
-                        Header::BaseInfo {}, 
-                        Body {"hi beatch"}
-                    ); 
+                    // message::PrivateMessage msg(
+                    //     Header::BaseInfo {}, 
+                    //     Body {"hi beatch"}
+                    // ); 
 
-                    auto jsonStr = msg.serialize().dump();
-                    std::vector<uint8_t> byteStr (jsonStr.begin(), jsonStr.end());
-                    write(byteStr);
+                    // auto jsonStr = msg.serialize().dump();
+                    // std::vector<uint8_t> byteStr (jsonStr.begin(), jsonStr.end());
+                    // write(byteStr);
 
                     _ioService.poll_one();
-                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    std::this_thread::sleep_for(std::chrono::seconds(10));
                 }
 
                 _socket.release();

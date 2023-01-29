@@ -42,7 +42,10 @@ public:
 
         const auto typecode
             = strToTypeCode(json[strings::Header][strings::TypeCode].get<std::string>());
+        
 
+        const auto id_to = json[strings::Header][strings::BaseInfo][strings::To].get<std::uint64_t>();
+        
         using namespace message;
 
         switch (typecode)
@@ -51,36 +54,45 @@ public:
         {
             for (auto const & consumer : _privateMessageConsumers)
                 consumer->consume(PrivateMessage(json));
+            _sender->sendToOne(id_to, data);
+            break;
         }
         case TypeCode::One2All:
         {
             for (auto const & consumer : _publicMessageConsumers)
                 consumer->consume(PublicMessage(json));
+            _sender->sendToAll(data);
+            break;
         }
         case TypeCode::One2Group:
         {
             for (auto const & consumer : _groupMessageConsumers)
                 consumer->consume(GroupMessage(json));
+            break;
         }
         case TypeCode::Ping:
         {
             for (auto const & consumer : _onlineListMessageConsumers)
                 consumer->consume(OnlineListMessage(json));
+            break;
         }
         case TypeCode::Connect:
         {
             for (auto const & consumer : _pingMessageConsumers)
                 consumer->consume(PingMessage(json));
+            break;
         }
         case TypeCode::Disconnect:
         {
             for (auto const & consumer : _connectMessageConsumers)
                 consumer->consume(ConnectMessage(json));
+            break;    
         }
         case TypeCode::OnlineInfo:
         {
             for (auto const & consumer : _disconnectMessageConsumers)
                 consumer->consume(DisconnectMessage(json));
+            break;
         }
         case TypeCode::WithBlob:
         default: break;

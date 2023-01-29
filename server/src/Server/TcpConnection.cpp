@@ -77,7 +77,10 @@ private:
     {
         if (not isConnected())
         {
-            throw std::runtime_error("There is no connection");
+            // disconnect();
+            // throw std::runtime_error("There is no connection");
+            _disconnectionHandler();
+            return;
         }
 
         _socket.async_receive(boost::asio::buffer(_buffer, _buffer.size()),
@@ -95,6 +98,7 @@ private:
             else if (error == boost::asio::error::eof)
             {
                 _disconnectionHandler();
+                return;
             }
             else
             {
@@ -118,7 +122,7 @@ private:
 
     boost::asio::ip::tcp::socket _socket;
 
-    bool _isConnected;
+    bool _isConnected = false;
     std::array<uint8_t, MAX_BUFFER_SIZE> _buffer;
     std::vector<std::shared_ptr<raw_consumer>> _consumers;
 

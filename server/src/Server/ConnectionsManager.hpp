@@ -27,17 +27,33 @@ public:
 
     void sendToOne(uint64_t id, std::vector<uint8_t> data) override
     {
-        if (_connections.count(id))
+        if (not _connections.count(id))
         {
             std::cerr << "[SERVER]: Error: \n" << "There are no connection exist with id " << id << std::endl;
             return;
         }
+        
         const auto connection = _connections.at(id);
         connection->write(data); 
     }
 
-    void sendToAll() override
+    void sendToAll(std::vector<uint8_t> data) override
     {
+        if (_connections.empty())
+        {
+            std::cerr << "[SERVER]: Error: \n" << "There are no active connections exist" << std::endl;
+            return;
+        }
+
+        for(auto &connection : _connections)
+        {
+            if (not connection.second->isConnected())
+            {
+                std::cerr << "[SERVER]: Error: \n" << "There are no connection exist with id " << connection.first << std::endl;
+                continue;
+            }
+            connection.second->write(data);
+        }
     }
 
     void sendToGroup() override

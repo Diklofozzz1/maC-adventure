@@ -125,6 +125,11 @@ private:
                 new_connection->subscribe(netModel);
 
                 _connectionsManager->addConnections(new_connection);
+
+                for(auto& item : _connections)
+                {
+                    std::cout<<item.first<<" : "<<item.second<<std::endl;
+                }
             }
             catch (const std::exception & err)
             {
